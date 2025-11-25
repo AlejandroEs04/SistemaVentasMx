@@ -1,31 +1,33 @@
 ﻿let tablaData;
 $(document).ready(function () {
+    console.log(`${API_URL}/Api/Sale`)
 
     $.datepicker.setDefaults($.datepicker.regional["es"])
 
     $("#txtFechaInicio").datepicker({ dateFormat: "dd/mm/yy" })
     $("#txtFechaFin").datepicker({ dateFormat: "dd/mm/yy" })
 
+
     tablaData = $('#tbdata').DataTable({
         responsive: true,
         "ajax": {
-            "url": '/Reporte/ReporteVenta?fechaInicio=01/01/1991&fechaFin=01/01/1991',
+            "url": `${API_URL}/Api/Sale`,
             "type": "GET",
-            "datatype": "json"
+            "datatype": "json",
+            "headers": {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            "dataSrc": ""
         },
         "columns": [
             { "data": "fechaRegistro" },
             { "data": "numeroVenta" },
-            { "data": "tipoDocumento" },
-            //{ "data": "documentoCliente" },
-            //{ "data": "nombreCliente" },
-            { "data": "subTotalVenta" },
-            { "data": "impuestoTotalVenta" },
-            { "data": "totalVenta" },
-            { "data": "producto" },
-            { "data": "cantidad" },
-            { "data": "precio" },
+            { "data": "documentoVenta" },
+            { "data": "subTotal" },
+            { "data": "impuestoTotal" },
             { "data": "total" },
+            { "data": "cantidadProductos" },
+            { "data": "cantidad" },
         ],
         order: [[0, "desc"]],
         dom: "Bfrtip",
@@ -41,8 +43,6 @@ $(document).ready(function () {
             url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
         },
     });
-
-
 })
 
 $("#btnBuscar").click(function () {
@@ -55,7 +55,13 @@ $("#btnBuscar").click(function () {
     let fechaInicio = $("#txtFechaInicio").val().trim();
     let fechaFin = $("#txtFechaFin").val().trim();
 
-    let nueva_url = `/Reporte/ReporteVenta?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+    const [sDia, sMes, sAño] = fechaInicio.split("/");
+    const nuevaFechaInicio = new Date(sAño, sMes - 1, sDia);
+
+    const [dia, mes, año] = fechaFin.split("/");
+    const nuevaFechaFin = new Date(año, mes - 1, dia);
+
+    let nueva_url = `${API_URL}/Api/Sale?startTime=${new Date(nuevaFechaInicio).toISOString()}&endTime=${new Date(nuevaFechaFin).toISOString()}`;
 
     tablaData.ajax.url(nueva_url).load();
 

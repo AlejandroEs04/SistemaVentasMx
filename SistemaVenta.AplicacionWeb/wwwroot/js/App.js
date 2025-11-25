@@ -37,6 +37,11 @@ function getAuth(successFnc) {
     })
 }
 
+function logout() {
+    localStorage.removeItem("token")
+    window.location.href = `${window.location.origin}/acceso/login`;
+}
+
 function fillMenu() {
     $.ajax({
         url: `${API_URL}/Api/Menu`,

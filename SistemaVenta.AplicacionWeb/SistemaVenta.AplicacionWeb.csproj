@@ -19,22 +19,4 @@
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.*" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SistemaVenta.BLL\SistemaVenta.BLL.csproj" />
-    <ProjectReference Include="..\SistemaVenta.Entity\SistemaVenta.Entity.csproj" />
-    <ProjectReference Include="..\SistemaVenta.IOC\SistemaVenta.IOC.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Utilidades\LibreriaPDF\libwkhtmltox.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Utilidades\LibreriaPDF\libwkhtmltox.dylib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Utilidades\LibreriaPDF\libwkhtmltox.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

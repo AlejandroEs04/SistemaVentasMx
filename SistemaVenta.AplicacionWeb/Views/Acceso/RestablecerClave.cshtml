@@ -1,5 +1,4 @@
-﻿@model SistemaVenta.AplicacionWeb.Models.ViewModels.VMUsuarioLogin;
-@{
+﻿@{
     Layout = null;
 }
 
@@ -37,7 +36,7 @@
                     </div>
                     <form class="user" asp-controller="Acceso" asp-action="RestablecerClave" method="post">
                         <div class="form-group">
-                            <input type="email" class="form-control form-control-user" asp-for="Correo" placeholder="Ingrese su correo">
+                            <input type="email" class="form-control form-control-user" placeholder="Ingrese su correo">
                         </div>
                         
                         @if (ViewData["Mensaje"] != null)

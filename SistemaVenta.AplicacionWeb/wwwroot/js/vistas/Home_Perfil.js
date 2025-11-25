@@ -16,7 +16,6 @@ $(document).ready(function () {
 })
 
 $("#btnGuardarCambios").click(function () {
-
     if ($("#txtCorreo").val().trim() == "") {
         toastr.warning("", "Debe completar el campo correo")
         $("#txtCorreo").focus()
@@ -27,7 +26,6 @@ $("#btnGuardarCambios").click(function () {
         $("#txTelefono").focus()
         return;
     }
-
 
     swal({
         title: "¿Desea guardar los cambios?",
@@ -42,34 +40,35 @@ $("#btnGuardarCambios").click(function () {
         function (respuesta) {
 
             if (respuesta) {
-
                 $(".showSweetAlert").LoadingOverlay("show");
 
-                let modelo = {
-                    correo: $("#txtCorreo").val().trim(),
-                    telefono: $("#txTelefono").val().trim()
-                }
+                getAuth(function (res) {
+                    const correo = $("#txtCorreo").val().trim()
+                    const telefono = $("#txTelefono").val().trim()
 
-                fetch("/Home/GuardarPerfil", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json; charset=utf-8" },
-                    body: JSON.stringify(modelo)
-                })
-                    .then(response => {
-                        $(".showSweetAlert").LoadingOverlay("hide");
-                        return response.ok ? response.json() : Promise.reject(response);
-                    })
-                    .then(responseJson => {
+                    res.clave = "";
+                    res.correo = correo;
+                    res.telefono = telefono;
 
-                        if (responseJson.estado) {
-
+                    $.ajax({
+                        url: `${API_URL}/Api/User/${res.idUsuario}`,
+                        method: 'PUT',
+                        data: JSON.stringify(res),
+                        contentType: "application/json",
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                        },
+                        success: function (response) {
+                            console.log(response)
                             swal("Listo!", "Los cambios fueron guardados", "success")
-                        } else {
-                            swal("Los sentimos", responseJson.mensaje, "error")
                         }
                     })
+                        .fail(function (err) {
+                            swal("Los sentimos", err, "error")
+                        })
+                })
 
-
+                $(".showSweetAlert").LoadingOverlay("hide");
             }
         }
     )
@@ -78,7 +77,6 @@ $("#btnGuardarCambios").click(function () {
 
 
 $("#btnCambiarClave").click(function () {
-
     const inputs = $("input.input-validar").serializeArray();
     const inputs_sin_valor = inputs.filter((item) => item.value.trim() == "")
 
