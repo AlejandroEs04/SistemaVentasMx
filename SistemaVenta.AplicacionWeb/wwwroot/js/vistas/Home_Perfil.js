@@ -94,28 +94,32 @@ $("#btnCambiarClave").click(function () {
 
     let modelo = {
         claveActual: $("#txtClaveActual").val().trim(),
-        claveNueva: $("#txtClaveNueva").val().trim()
+        nuevaClave: $("#txtClaveNueva").val().trim(),
+        nuevaClaveRepetida: $("#txtConfirmarClave").val().trim()
     }
 
-
-    fetch("/Home/CambiarClave", {
-        method: "POST",
-        headers: { "Content-Type": "application/json; charset=utf-8" },
-        body: JSON.stringify(modelo)
-    })
-        .then(response => {
-            $(".showSweetAlert").LoadingOverlay("hide");
-            return response.ok ? response.json() : Promise.reject(response);
-        })
-        .then(responseJson => {
-
-            if (responseJson.estado) {
-
-                swal("Listo!", "Su contraseña  fue actualizada", "success")
-                $("input.input-validar").val("");
-            } else {
-                swal("Los sentimos", responseJson.mensaje, "error")
+    getAuth(function (res) {
+        $.ajax({
+            url: `${API_URL}/Api/User/ChangePassword/${res.idUsuario}`,
+            method: 'PUT',
+            data: JSON.stringify(modelo),
+            contentType: "application/json",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            },
+            success: function (response) {
+                console.log(response)
+                swal("Listo!", "Los cambios fueron guardados", "success")
             }
         })
+            .fail(function (err) {
+                swal("Los sentimos", err, "error")
+            })
+    })
 
+    $("#txtClaveActual").val('')
+    $("#txtClaveNueva").val('')
+    $("#txtConfirmarClave").val('')
+
+    $(".showSweetAlert").LoadingOverlay("hide");
 })
